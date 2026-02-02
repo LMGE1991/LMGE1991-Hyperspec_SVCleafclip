@@ -1,0 +1,15 @@
+# R / RStudio
+.Rproj.user/
+.Rhistory
+.RData
+.Ruserdata
+
+# macOS
+.DS_Store
+
+# knitr / rmarkdown
+*_cache/
+*_files/
+
+# Temporary files
+.Rtmp/
