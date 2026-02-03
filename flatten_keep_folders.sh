@@ -14,14 +14,17 @@ set -euo pipefail
 #   ./flatten_keep_folders.sh -s "/path/src" -d "/path/dst" --delim "__"        (copy)
 #   ./flatten_keep_folders.sh -s "/path/src" -d "/path/dst" --delim "__" --move (move)
 
+# Default parameters. Here DELIM is double underscore, but you can change it.
 SRC=""
 DST=""
 DELIM="__"
 MODE="copy"
 DRYRUN=0
 
+# die is a function to print an error message and exit if something goes wrong.
 die() { echo "ERROR: $*" >&2; exit 1; }
 
+# Parse arguments
 while [[ $# -gt 0 ]]; do
   case "$1" in
     -s|--src) SRC="${2:-}"; shift 2;;
@@ -41,13 +44,16 @@ EOF
   esac
 done
 
+# Validate arguments
 [[ -n "$SRC" ]] || die "Missing --src"
 [[ -n "$DST" ]] || die "Missing --dst"
 
+# Resolve to absolute paths
 SRC="$(cd "$SRC" && pwd)"
 mkdir -p "$DST"
 DST="$(cd "$DST" && pwd)"
 
+# Check that source and destination are directories
 [[ -d "$SRC" ]] || die "Source is not a directory: $SRC"
 [[ -d "$DST" ]] || die "Destination is not a directory: $DST"
 
@@ -69,6 +75,7 @@ sanitise() {
   echo "$s"
 }
 
+# Transfer function: copy or move based on MODE
 transfer() {
   local src="$1"
   local dst="$2"
